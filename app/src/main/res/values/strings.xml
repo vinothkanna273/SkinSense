@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">SkinSense</string>
+    <string name="login">Login</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="register">Register</string>
+    <string name="click_to_login">Click to login</string>
+    <string name="click_to_register">Click to register</string>
+    <string name="logout">Logout</string>
+    <string name="not_yet_registered_signup_now">Not yet registered? SignUp Now</string>
+    <string name="already_a_user_signin_now">Already a User? SignIn Now</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="classified_as">Classified as</string>
+    <string name="options">Options</string>
+    <string name="disease_image">Disease image</string>
+</resources>
