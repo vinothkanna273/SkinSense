@@ -31,7 +31,7 @@ public class Home extends AppCompatActivity {
                     replaceFragment(new HomeFragment());
                     break;
                 case R.id.tools:
-                    replaceFragment(new ToolsFragment());
+                    replaceFragment(new MapsFragment());
                     break;
                 case R.id.blog:
                     replaceFragment(new BlogFragment());

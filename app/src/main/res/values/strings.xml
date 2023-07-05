@@ -14,4 +14,5 @@
     <string name="classified_as">Classified as</string>
     <string name="options">Options</string>
     <string name="disease_image">Disease image</string>
+    <string name="title_activity_map">map</string>
 </resources>
