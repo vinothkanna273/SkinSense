@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.os.Bundle;
 
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
@@ -30,12 +31,22 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 
+
 public class CameraFragment extends Fragment {
 
     TextView result, confidence;
     ImageView imageView;
     int imageSize = 224;
 
+    CardView basicMedic, nearbyDoc;
+
+    private FragmentChangeListener fragmentChangeListener;
+
+    public interface FragmentChangeListener {
+        void onFragmentChange(Fragment fragment);
+    }
+
+    @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -43,6 +54,9 @@ public class CameraFragment extends Fragment {
         result = view.findViewById(R.id.result);
         //confidence = view.findViewById(R.id.confidence);
         imageView = view.findViewById(R.id.imageView);
+        basicMedic = view.findViewById(R.id.basicMedic);
+        nearbyDoc = view.findViewById(R.id.nearbyDoc);
+
 
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -52,8 +66,29 @@ public class CameraFragment extends Fragment {
             requestPermissions(new String[]{Manifest.permission.CAMERA}, 100);
         }
 
+        nearbyDoc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (fragmentChangeListener != null) {
+                    fragmentChangeListener.onFragmentChange(new MapsFragment());
+                }
+            }
+        });
         return view;
     }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            fragmentChangeListener = (FragmentChangeListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement FragmentChangeListener");
+        }
+    }
+
+
 
 
     @SuppressLint("DefaultLocale")
@@ -129,3 +164,4 @@ public class CameraFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
     }
 }
+

@@ -11,11 +11,10 @@ import android.view.View;
 import com.example.sstrial.databinding.ActivityHomeBinding;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class Home extends AppCompatActivity {
+public class Home extends AppCompatActivity implements CameraFragment.FragmentChangeListener {
 
     ActivityHomeBinding binding;
     FloatingActionButton click;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +22,7 @@ public class Home extends AppCompatActivity {
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         replaceFragment(new HomeFragment());
-        click=findViewById(R.id.CameraClick);
+        click = findViewById(R.id.CameraClick);
         binding.bottomNavigationView.setBackground(null);
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
@@ -31,7 +30,7 @@ public class Home extends AppCompatActivity {
                     replaceFragment(new HomeFragment());
                     break;
                 case R.id.tools:
-                    replaceFragment(new MapsFragment());
+                    replaceFragment(new ToolsFragment());
                     break;
                 case R.id.blog:
                     replaceFragment(new BlogFragment());
@@ -50,10 +49,16 @@ public class Home extends AppCompatActivity {
             }
         });
     }
-    private void replaceFragment(Fragment fragment) {
+
+    public void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout, fragment);
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onFragmentChange(Fragment fragment) {
+        replaceFragment(fragment);
     }
 }

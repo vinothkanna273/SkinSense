@@ -1,43 +1,46 @@
 package com.example.sstrial;
 
-import android.util.Log;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 public class DownloadUrl {
-    public String retriveUrl(String url) throws IOException{
-        String urlData = "";
-        HttpURLConnection httpURLConnection= null;
+
+    public String RaedTheUrl(String placeUrl) throws IOException {
+        String Data = "";
         InputStream inputStream = null;
+        HttpURLConnection httpURLConnection = null;
+
+        URL url = null;
         try {
-            URL getUrl = new URL(url);
-            httpURLConnection = (HttpURLConnection)getUrl.openConnection();
+            url = new URL(placeUrl);
+            httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.connect();
-
-            inputStream=httpURLConnection.getInputStream();
-
+            inputStream = httpURLConnection.getInputStream();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-            StringBuffer sb = new StringBuffer();
+            StringBuffer stringBuffer = new StringBuffer();
 
             String line = "";
 
-            while ((line = bufferedReader.readLine())!=null){
-                sb.append(line);
+            while ((line = bufferedReader.readLine()) != null) {
+                stringBuffer.append(line);
             }
 
-            urlData = sb.toString();
+            Data = stringBuffer.toString();
             bufferedReader.close();
-        }catch (Exception e){
-            Log.d("Exception", e.toString());
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         } finally {
             inputStream.close();
             httpURLConnection.disconnect();
         }
-        return urlData;
+        return Data;
     }
 }
