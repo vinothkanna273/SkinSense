@@ -7,15 +7,15 @@
     android:layout_height="match_parent"
     android:background="@color/green"
     tools:context=".Home">
-
+    
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/frame_layout"/>
-
+    
     <com.google.android.material.bottomappbar.BottomAppBar
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:id="@+id/bottomAppBar"
         android:layout_gravity="bottom"
         android:background="@color/green2"
@@ -29,18 +29,17 @@
             android:layout_marginEnd="20dp"
             app:labelVisibilityMode="labeled"
             android:background="@android:color/transparent"
-            app:menu="@menu/bottom_menu"/>
+            app:menu="@menu/bottom_menu" />
 
     </com.google.android.material.bottomappbar.BottomAppBar>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/CameraClick"
         android:backgroundTint="@color/white"
         android:src="@drawable/ic_baseline_camera_24"
         app:layout_anchor="@id/bottomAppBar"
         app:maxImageSize="40dp"
-        app:tint ="@color/green"/>
+        app:tint ="@color/green2"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
