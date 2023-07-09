@@ -6,13 +6,72 @@
     android:background="@color/grey"
     tools:context=".ToolsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Previous Record"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:layout_marginTop="15dp"
+        android:gravity="center_horizontal"
+        android:textColor="@color/green2" />
+
+    <ScrollView
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Tools"
-        android:gravity="center"
-        android:textSize="30sp"
-        android:textColor="@color/green2"  />
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="60dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/recordBox">
+
+      <!--  <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:padding="10dp"
+            android:background="@drawable/custom_edittext">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/date"
+                android:text="2023-07-09"
+                android:textSize="22sp"
+                android:textColor="@color/green2" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/time"
+                android:text="17:09:54"
+                android:textSize="22sp"
+                android:textColor="@color/green2"
+                android:layout_below="@+id/date"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/result"
+                android:text="Acne and Rosacea"
+                android:textSize="22sp"
+                android:textColor="@color/green2"
+                android:layout_below="@+id/time"/>
+            <ImageView
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:id="@+id/photo"
+                android:visibility="gone"
+                android:src="@drawable/medicine"
+                android:layout_marginLeft="75dp"
+                android:layout_below="@+id/result"
+                android:foregroundGravity="center"/>
+        </RelativeLayout> -->
+
+    </LinearLayout>
+    </ScrollView>
+
+
 
 </FrameLayout>
