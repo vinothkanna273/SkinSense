@@ -13,6 +13,7 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,14 +23,24 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 
 import com.example.sstrial.ml.Model;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 
 public class CameraFragment extends Fragment {
@@ -39,6 +50,9 @@ public class CameraFragment extends Fragment {
     int imageSize = 224;
 
     CardView basicMedic, nearbyDoc;
+
+    FirebaseAuth auth;
+    FirebaseUser user;
 
     private FragmentChangeListener fragmentChangeListener;
 
@@ -62,7 +76,6 @@ public class CameraFragment extends Fragment {
             Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             startActivityForResult(cameraIntent, 1);
         } else {
-
             requestPermissions(new String[]{Manifest.permission.CAMERA}, 100);
         }
 
@@ -77,6 +90,7 @@ public class CameraFragment extends Fragment {
         return view;
     }
 
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -89,14 +103,12 @@ public class CameraFragment extends Fragment {
     }
 
 
-
-
     @SuppressLint("DefaultLocale")
     public void classifyImage(Bitmap image){
         try {
+
             //Model model = Model.newInstance(getApplicationContext());
             Model model = Model.newInstance(requireContext());
-
 
 
             TensorBuffer inputFeature0 = TensorBuffer.createFixedSize(new int[]{1, 224, 224, 3}, DataType.FLOAT32);
@@ -134,15 +146,22 @@ public class CameraFragment extends Fragment {
             String[] classes = {"Acne and Rosacea", "Alopecia", "Distal Subungual", "Melanoma Skin Cancer Nevi", "Herpes HPV and STD"};
 
             result.setText(classes[maxPos]);
-            /*String s = "";
+            /* Confidence level
+            String s = "";
             for(int i = 0; i < classes.length; i++){
                 s += String.format("" +
                         "%s: %.1f%%\n", classes[i], confidences[i] * 100);
             }
             confidence.setText(s);*/
 
-            // Releases model resources if no longer used.
+            // releases model resources if no longer used.
             model.close();
+
+            // store in database
+            String diseaseResult = classes[maxPos];
+            String dateTime = getCurrentDateTime();
+            uploadDataToFirebase(image, diseaseResult, dateTime);
+
         } catch (IOException e) {
             // TODO Handle the exception
         }
@@ -158,10 +177,57 @@ public class CameraFragment extends Fragment {
             image = ThumbnailUtils.extractThumbnail(image, dimension, dimension);
             imageView.setImageBitmap(image);
 
+
             image = Bitmap.createScaledBitmap(image, imageSize, imageSize, false);
             classifyImage(image);
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    private String getCurrentDateTime() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        return sdf.format(new Date());
+    }
+
+
+    private void uploadDataToFirebase(Bitmap image, String result, String dateTime) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] imageData = baos.toByteArray();
+
+        // upload image
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        StorageReference imageRef = storageRef.child("images/"+dateTime+".jpg");
+        UploadTask uploadTask = imageRef.putBytes(imageData);
+        uploadTask.addOnSuccessListener(taskSnapshot -> {
+            // image uploaded successfully
+            // image to realtime database
+            Log.d("Opened "," uploading code ------------------------------------");
+            imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+
+                // getting the image URL
+                String imageUrl = uri.toString();
+
+                // store  img URL, result, and datetime to realtime database
+                auth = FirebaseAuth.getInstance();
+                String Uid = auth.getUid();
+
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference reference = database.getReference("user").child(Uid).child("storage").child(dateTime);
+
+                String entryKey = reference.push().getKey();
+                DataModel data = new DataModel(imageUrl, result, dateTime);
+                reference.setValue(data)
+                        .addOnSuccessListener(aVoid -> {
+                        })
+                        .addOnFailureListener(e -> {
+                        });
+            }).addOnFailureListener(exception -> {
+            });
+        }).addOnFailureListener(exception -> {
+        });
+
     }
 }
 

@@ -10,6 +10,8 @@ import android.view.View;
 
 import com.example.sstrial.databinding.ActivityHomeBinding;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.ktx.Firebase;
 
 public class Home extends AppCompatActivity implements CameraFragment.FragmentChangeListener {
 
@@ -21,6 +23,7 @@ public class Home extends AppCompatActivity implements CameraFragment.FragmentCh
         super.onCreate(savedInstanceState);
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        String uid = FirebaseAuth.getInstance().getUid();
         replaceFragment(new HomeFragment());
         click = findViewById(R.id.CameraClick);
         binding.bottomNavigationView.setBackground(null);
