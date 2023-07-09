@@ -56,6 +56,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
     private static final int Request_User_Location_Code = 99;
     private double latitude,longitude;
     private int ProximityRadius = 3000;
+    String apiKey = getContext().getString(R.string.api_key_map);
 
     @Nullable
     @Override
@@ -113,7 +114,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
         googleURL.append("&radius="+ProximityRadius);
         googleURL.append("&type="+nearbyPlace);
         googleURL.append("&sensor=true");
-        googleURL.append("&key=AIzaSyBoP_x807sGOaWP0DZ2wjN_axCA0qD9l04");
+        googleURL.append("&key="+apiKey);
 
         Log.d("GoogleMapsActivity","url = "+googleURL.toString());
         return googleURL.toString();

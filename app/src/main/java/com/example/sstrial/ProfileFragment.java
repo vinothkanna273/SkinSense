@@ -8,16 +8,22 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class ProfileFragment extends Fragment {
 
     FirebaseAuth auth;
     Button logout;
-    TextView textUser;
+    TextView emailDetail, nameDetail, phoneDetail;
     FirebaseUser user;
 
     @Override
@@ -26,15 +32,31 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         auth = FirebaseAuth.getInstance();
         logout = view.findViewById(R.id.logout);
-        textUser = view.findViewById(R.id.user_details);
+        emailDetail = view.findViewById(R.id.emailDetail);
+        nameDetail = view.findViewById(R.id.nameDetail);
+        phoneDetail = view.findViewById(R.id.phoneDetail);
         user = auth.getCurrentUser();
+        String Uid = auth.getUid();
 
         if (user == null) {
             Intent intent = new Intent(requireContext(), Login.class);
             startActivity(intent);
             requireActivity().finish();
         } else {
-            textUser.setText(user.getEmail());
+            emailDetail.setText(user.getEmail());
+            DatabaseReference dataRef = FirebaseDatabase.getInstance().getReference().child("user").child(Uid);
+            dataRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    nameDetail.setText(snapshot.child("name").getValue(String.class));
+                    phoneDetail.setText(snapshot.child("phone").getValue(String.class));
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
         }
 
         logout.setOnClickListener(new View.OnClickListener() {
