@@ -82,6 +82,29 @@
                     android:textColor="@color/green2"
                     />
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginTop="25dp"
+                android:orientation="horizontal"
+                android:paddingLeft="80dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    app:tint="@color/yellow2"
+                    android:src="@drawable/ic_baseline_calendar_month_24"/>
+                <TextView
+                    android:id="@+id/ageDetail"
+                    android:textStyle="bold"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:textColor="@color/green2"
+                    />
+            </LinearLayout>
+
             <LinearLayout
                 android:layout_marginTop="25dp"
                 android:orientation="horizontal"
@@ -103,6 +126,7 @@
                     android:textColor="@color/green2"
                     />
             </LinearLayout>
+
 
 
         <Button

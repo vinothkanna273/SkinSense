@@ -1,6 +1,9 @@
 package com.example.sstrial;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -15,8 +18,11 @@ import com.bumptech.glide.annotation.GlideModule;
 import com.bumptech.glide.module.AppGlideModule;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -93,10 +99,21 @@ public class ToolsFragment extends Fragment {
                     if (imageUrl != null && !imageUrl.isEmpty()) {
                         Glide.with(requireContext())
                                 .load(imageUrl)
-                                .placeholder(R.drawable.medicine) // Default image resource
+                                .placeholder(R.drawable.ic_baseline_image_24) // Default image resource
+                                .apply(RequestOptions.placeholderOf(R.drawable.ic_baseline_image_24)
+                                        .error(R.drawable.ic_baseline_image_24)
+                                        .placeholder(new ColorDrawable(ContextCompat.getColor(requireContext(), R.color.yellow2))))
                                 .into(uploadImage);
+
                     } else {
-                        uploadImage.setImageResource(R.drawable.medicine); // Use default image
+                        // Replace `YourActivity` with the name of your actual Activity class
+                        Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_baseline_image_24);
+                        if (drawable != null) {
+                            drawable = DrawableCompat.wrap(drawable);
+                            DrawableCompat.setTint(drawable, ContextCompat.getColor(getContext(), R.color.yellow2));
+                            uploadImage.setImageDrawable(drawable);
+                        }
+
                     }
 
                     TextView dateTextView = createTextView(date, 22);

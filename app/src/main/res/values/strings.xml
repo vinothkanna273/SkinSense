@@ -16,4 +16,14 @@
     <string name="disease_image">Disease image</string>
     <string name="title_activity_map">map</string>
     <string name="api_key_map">AIzaSyBoP_x807sGOaWP0DZ2wjN_axCA0qD9l04</string>
+    <string name="title_activity_get_details">GetDetailsActivity</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="phone_no">Phone No</string>
 </resources>

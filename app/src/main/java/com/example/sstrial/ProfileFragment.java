@@ -1,5 +1,6 @@
 package com.example.sstrial;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -23,9 +24,10 @@ public class ProfileFragment extends Fragment {
 
     FirebaseAuth auth;
     Button logout;
-    TextView emailDetail, nameDetail, phoneDetail;
+    TextView emailDetail, nameDetail, phoneDetail, ageDetail;
     FirebaseUser user;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -35,6 +37,7 @@ public class ProfileFragment extends Fragment {
         emailDetail = view.findViewById(R.id.emailDetail);
         nameDetail = view.findViewById(R.id.nameDetail);
         phoneDetail = view.findViewById(R.id.phoneDetail);
+        ageDetail = view.findViewById(R.id.ageDetail);
         user = auth.getCurrentUser();
         String Uid = auth.getUid();
 
@@ -50,6 +53,7 @@ public class ProfileFragment extends Fragment {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     nameDetail.setText(snapshot.child("name").getValue(String.class));
                     phoneDetail.setText(snapshot.child("phone").getValue(String.class));
+                    ageDetail.setText(snapshot.child("age").getValue(String.class));
                 }
 
                 @Override
