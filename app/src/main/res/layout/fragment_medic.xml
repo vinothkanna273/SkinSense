@@ -6,13 +6,83 @@
     android:background="@color/grey"
     tools:context=".MedicFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:text="Basic Medication"
-        android:gravity="center"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        android:textColor="@color/green2" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/dataResult"
+        android:layout_marginTop="42dp"
+        android:text="jbheb"
+        android:gravity="center_horizontal"
         android:textColor="@color/green2"
         android:textSize="25dp"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="80dp"
+        android:layout_marginBottom="60dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/medicBox">
+
+            <!--Code for record comes here -->
+            <!--
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:padding="10dp"
+                android:background="@drawable/custom_edittext">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/medName"
+                    android:text="Medicine name"
+                    android:textStyle="bold"
+                    android:textSize="22sp"
+                    android:textColor="@color/green2" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/medChem"
+                    android:text="chemical name"
+                    android:textSize="22sp"
+                    android:textColor="@color/green2"
+                    android:layout_below="@+id/medName"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/medRs"
+                    android:text="Rs: 450"
+                    android:textSize="22sp"
+                    android:textColor="@color/green2"
+                    android:layout_below="@+id/medChem"/>
+                <ImageView
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:id="@+id/photo"
+                    android:visibility="visible"
+                    android:src="@drawable/medicine"
+                    android:layout_marginLeft="75dp"
+                    android:layout_below="@+id/medRs"
+                    android:foregroundGravity="center"/>
+            </RelativeLayout>-->
+
+        </LinearLayout>
+    </ScrollView>
 
 </FrameLayout>

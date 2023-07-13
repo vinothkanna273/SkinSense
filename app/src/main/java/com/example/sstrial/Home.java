@@ -13,7 +13,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 //import com.google.firebase.ktx.Firebase;
 
-public class Home extends AppCompatActivity implements CameraFragment.FragmentChangeListener {
+public class Home extends AppCompatActivity implements CameraFragment.FragmentChangeListener  {
 
     ActivityHomeBinding binding;
     FloatingActionButton click;
@@ -53,6 +53,7 @@ public class Home extends AppCompatActivity implements CameraFragment.FragmentCh
         });
     }
 
+    // set fragment in home activity
     public void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -60,8 +61,15 @@ public class Home extends AppCompatActivity implements CameraFragment.FragmentCh
         fragmentTransaction.commit();
     }
 
+    // Fragment replace with data share
     @Override
-    public void onFragmentChange(Fragment fragment) {
+    public void onFragmentChange(Fragment fragment, String data) {
+        if (fragment instanceof MedicFragment) {
+            ((MedicFragment) fragment).setData(data);
+        }
         replaceFragment(fragment);
     }
+
+
+
 }

@@ -54,10 +54,12 @@ public class CameraFragment extends Fragment {
     FirebaseAuth auth;
     FirebaseUser user;
 
-    private FragmentChangeListener fragmentChangeListener;
+    private String shareResult;
 
+    // Fragment replacement with data share
+    private FragmentChangeListener fragmentChangeListener;
     public interface FragmentChangeListener {
-        void onFragmentChange(Fragment fragment);
+        void onFragmentChange(Fragment fragment, String data);
     }
 
     @SuppressLint("MissingInflatedId")
@@ -83,7 +85,8 @@ public class CameraFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (fragmentChangeListener != null) {
-                    fragmentChangeListener.onFragmentChange(new MapsFragment());
+                    String dataToSend = "Nearby";
+                    fragmentChangeListener.onFragmentChange(new MapsFragment(), dataToSend);
                 }
             }
         });
@@ -91,7 +94,7 @@ public class CameraFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (fragmentChangeListener != null) {
-                    fragmentChangeListener.onFragmentChange(new MedicFragment());
+                    fragmentChangeListener.onFragmentChange(new MedicFragment(), shareResult);
                 }
             }
         });
@@ -154,6 +157,7 @@ public class CameraFragment extends Fragment {
             String[] classes = {"Acne and Rosacea", "Alopecia", "Distal Subungual", "Melanoma Skin Cancer Nevi", "Herpes HPV and STD"};
 
             result.setText(classes[maxPos]);
+            shareResult = classes[maxPos];
             /* Confidence level
             String s = "";
             for(int i = 0; i < classes.length; i++){
