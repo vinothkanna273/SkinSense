@@ -11,7 +11,7 @@ import android.view.View;
 import com.example.sstrial.databinding.ActivityHomeBinding;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.ktx.Firebase;
+//import com.google.firebase.ktx.Firebase;
 
 public class Home extends AppCompatActivity implements CameraFragment.FragmentChangeListener {
 
@@ -36,7 +36,7 @@ public class Home extends AppCompatActivity implements CameraFragment.FragmentCh
                     replaceFragment(new ToolsFragment());
                     break;
                 case R.id.blog:
-                    replaceFragment(new BlogFragment());
+                    replaceFragment(new MapsFragment());
                     break;
                 case R.id.profile:
                     replaceFragment(new ProfileFragment());

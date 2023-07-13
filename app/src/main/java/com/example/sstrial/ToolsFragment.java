@@ -107,7 +107,7 @@ public class ToolsFragment extends Fragment {
 
                     } else {
                         // Replace `YourActivity` with the name of your actual Activity class
-                        Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_baseline_image_24);
+                        Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_baseline_image_24 );
                         if (drawable != null) {
                             drawable = DrawableCompat.wrap(drawable);
                             DrawableCompat.setTint(drawable, ContextCompat.getColor(getContext(), R.color.yellow2));

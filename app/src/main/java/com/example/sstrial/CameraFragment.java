@@ -87,6 +87,14 @@ public class CameraFragment extends Fragment {
                 }
             }
         });
+        basicMedic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (fragmentChangeListener != null) {
+                    fragmentChangeListener.onFragmentChange(new MedicFragment());
+                }
+            }
+        });
         return view;
     }
 
