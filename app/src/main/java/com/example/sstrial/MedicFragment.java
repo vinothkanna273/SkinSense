@@ -1,8 +1,10 @@
 package com.example.sstrial;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -65,10 +67,10 @@ public class MedicFragment extends Fragment {
                 fetchMedicineData(dataRef.child("Distal Subungual"), linearLayout);
                 break;
             case "Melanoma Skin Cancer Nevi":
-                fetchMedicineData(dataRef.child("Melanoma Skin Cancer Nevi"), linearLayout);
+                fetchMedicineData(dataRef.child("Melanoma"), linearLayout);
                 break;
             case "Herpes HPV and STD":
-                fetchMedicineData(dataRef.child("Herpes HPV and STD"), linearLayout);
+                fetchMedicineData(dataRef.child("Herpes"), linearLayout);
                 break;
         }
 
@@ -84,6 +86,7 @@ public class MedicFragment extends Fragment {
                     String medChem = dataSnapshot.child("chemical").getValue(String.class);
                     String medRs = dataSnapshot.child("price").getValue(String.class);
                     String imageUrl = dataSnapshot.child("imageUrl").getValue(String.class);
+                    String link = dataSnapshot.child("link").getValue(String.class);
 
                     LinearLayout linearLayoutItem = createLinearLayout();
                     linearLayoutItem.setOrientation(LinearLayout.VERTICAL);
@@ -117,6 +120,16 @@ public class MedicFragment extends Fragment {
                     linearLayoutItem.addView(medChemTextView);
                     linearLayoutItem.addView(medRsTextView);
                     linearLayoutItem.addView(uploadImage);
+                    linearLayoutItem.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String url = link;
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            intent.setData(Uri.parse(url));
+                            startActivity(intent);
+                        }
+                    });
+
 
                     linearLayout.addView(linearLayoutItem);
                 }
