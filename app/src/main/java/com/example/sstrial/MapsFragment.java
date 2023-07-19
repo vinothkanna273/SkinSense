@@ -22,6 +22,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.sstrial.GetNearbyPlaces;
+import com.example.sstrial.R;
 import com.example.sstrial.databinding.FragmentMapsBinding;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -54,16 +56,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
     private Location lastlocation;
     private Marker currentUserLocationMarker;
     private static final int Request_User_Location_Code = 99;
-    private double latitude,longitude;
+    private double latitude, longitude;
     private int ProximityRadius = 3000;
-    //String apiKey = getContext().getString(R.string.api_key_map);
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_maps, container, false);
         return view;
-
     }
 
     @Override
@@ -71,25 +71,30 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
         super.onViewCreated(view, savedInstanceState);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            checkUserLocationPermission();
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted, proceed with map initialization
+                initMap();
+            } else {
+                // Request location permission
+                requestLocationPermission();
+            }
+        } else {
+            // Device is running an older version of Android, proceed with map initialization
+            initMap();
         }
-
+    }
+    private void initMap() {
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
-
-        // Executing nearby search of hospital
-        onHospitalNearbyClicked();
-
-        /* view.findViewById(R.id.hospital_nearby).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-              onHospitalNearbyClicked();
-            }
-        });*/
     }
+    private void requestLocationPermission() {
+        // Request the location permission
+        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Request_User_Location_Code);
+    }
+
 
     private void onHospitalNearbyClicked() {
         Toast.makeText(requireContext(), "Searching for nearby Hospitals", Toast.LENGTH_SHORT).show();
@@ -108,15 +113,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
         }, 2000);
     }
 
-    private String getUrl(double latitude,double longitude,String nearbyPlace){
-        StringBuilder googleURL= new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
-        googleURL.append("location="+latitude+","+longitude);
-        googleURL.append("&radius="+ProximityRadius);
-        googleURL.append("&type="+nearbyPlace);
+    private String getUrl(double latitude, double longitude, String nearbyPlace) {
+        StringBuilder googleURL = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
+        googleURL.append("location=" + latitude + "," + longitude);
+        googleURL.append("&radius=" + ProximityRadius);
+        googleURL.append("&type=" + nearbyPlace);
         googleURL.append("&sensor=true");
         googleURL.append("&key=AIzaSyBoP_x807sGOaWP0DZ2wjN_axCA0qD9l04");
 
-        Log.d("GoogleMapsActivity","url = "+googleURL.toString());
+        Log.d("GoogleMapsActivity", "url = " + googleURL.toString());
         return googleURL.toString();
     }
 
@@ -133,13 +138,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                 mMap.animateCamera(CameraUpdateFactory.zoomBy(12));
             }
+
+            // Trigger nearby hospital search
+            onHospitalNearbyClicked();
         }
     }
 
-
-    @Override
+    /*@Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case Request_User_Location_Code:
@@ -153,6 +159,20 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
                 } else {
                     Toast.makeText(requireContext(), "Permission Denied...", Toast.LENGTH_SHORT).show();
                 }
+                break;
+        }
+    }*/
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == Request_User_Location_Code) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Location permission is granted, proceed with map initialization
+                initMap();
+            } else {
+                // Location permission is denied, show a message or handle the scenario accordingly
+                Toast.makeText(requireContext(), "Location permission denied", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -164,6 +184,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
                 .build();
         googleApiClient.connect();
     }
+
     public boolean checkUserLocationPermission() {
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION)) {
@@ -179,32 +200,34 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onLocationChanged(Location location) {
+        if (location != null) {
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
 
-        latitude = location.getLatitude();
-        longitude = location.getLongitude();
+            lastlocation = location;
 
-        lastlocation = location;
+            if (currentUserLocationMarker != null) {
+                currentUserLocationMarker.remove();
+            }
 
-        if (currentUserLocationMarker != null) {
-            currentUserLocationMarker.remove();
+            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.position(latLng);
+            markerOptions.title("User current location");
+            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+
+            currentUserLocationMarker = mMap.addMarker(markerOptions);
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+
+            if (googleApiClient != null) {
+                LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
+            }
+        } else {
+            // Handle the scenario when the location is null
+            // You can prompt the user to try again or show a default location
         }
-
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(latLng);
-        markerOptions.title("User current location");
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-
-        currentUserLocationMarker = mMap.addMarker(markerOptions);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
-
-        if (googleApiClient != null) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
-        }
-
     }
-
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -237,5 +260,4 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
-
 }
